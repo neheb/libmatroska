@@ -399,9 +399,9 @@ filepos_t KaxInternalBlock::RenderData(IOCallback & output, bool /* bForceRender
     }
 
     // put the data of each frame
-    for (i=0; i<myBuffers.size(); i++) {
-      output.writeFully(myBuffers[i]->Buffer(), myBuffers[i]->Size());
-      SetSize_(GetSize() + myBuffers[i]->Size());
+    for (auto buff : myBuffers) {
+      output.writeFully(buff->Buffer(), buff->Size());
+      SetSize_(GetSize() + buff->Size());
     }
   }
 
