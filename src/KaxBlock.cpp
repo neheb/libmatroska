@@ -939,21 +939,14 @@ int64 KaxInternalBlock::GetFrameSize(size_t FrameNumber)
   return _Result;
 }
 
-KaxBlockBlob::operator KaxBlockGroup &()
+KaxBlockBlob::operator KaxBlockGroup &() const
 {
   assert(!bUseSimpleBlock);
   assert(Block.group);
   return *Block.group;
 }
 
-KaxBlockBlob::operator const KaxBlockGroup &() const
-{
-  assert(!bUseSimpleBlock);
-  assert(Block.group);
-  return *Block.group;
-}
-
-KaxBlockBlob::operator KaxInternalBlock &()
+KaxBlockBlob::operator KaxInternalBlock &() const
 {
   assert(Block.group);
   if (bUseSimpleBlock)
@@ -961,15 +954,7 @@ KaxBlockBlob::operator KaxInternalBlock &()
   return *Block.group;
 }
 
-KaxBlockBlob::operator const KaxInternalBlock &() const
-{
-  assert(Block.group);
-  if (bUseSimpleBlock)
-    return *Block.simpleblock;
-  return *Block.group;
-}
-
-KaxBlockBlob::operator KaxSimpleBlock &()
+KaxBlockBlob::operator KaxSimpleBlock &() const
 {
   assert(bUseSimpleBlock);
   assert(Block.simpleblock);
