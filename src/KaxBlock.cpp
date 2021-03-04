@@ -139,7 +139,7 @@ bool KaxInternalBlock::AddFrame(const KaxTrackEntry & track, uint64 timecode, Da
   \return Returns the lacing type that produces the smallest footprint.
 */
 LacingType KaxInternalBlock::GetBestLacingType() const {
-  int XiphLacingSize, EbmlLacingSize, i;
+  size_t XiphLacingSize, EbmlLacingSize, i;
   bool SameSize = true;
 
   if (myBuffers.size() <= 1)
@@ -147,13 +147,13 @@ LacingType KaxInternalBlock::GetBestLacingType() const {
 
   XiphLacingSize = 1; // Number of laces is stored in 1 byte.
   EbmlLacingSize = 1;
-  for (i = 0; i < static_cast<int>(myBuffers.size()) - 1; i++) {
+  for (i = 0; i < myBuffers.size() - 1; i++) {
     if (myBuffers[i]->Size() != myBuffers[i + 1]->Size())
       SameSize = false;
     XiphLacingSize += myBuffers[i]->Size() / 255 + 1;
   }
   EbmlLacingSize += CodedSizeLength(myBuffers[0]->Size(), 0, IsFiniteSize());
-  for (i = 1; i < static_cast<int>(myBuffers.size()) - 1; i++)
+  for (i = 1; i < myBuffers.size() - 1; i++)
     EbmlLacingSize += CodedSizeLengthSigned(int64(myBuffers[i]->Size()) - int64(myBuffers[i - 1]->Size()), 0);
   if (SameSize)
     return LACING_FIXED;
@@ -858,8 +858,7 @@ void KaxBlockGroup::ReleaseFrames()
 void KaxInternalBlock::ReleaseFrames()
 {
   // free the allocated Frames
-  int i;
-  for (i=myBuffers.size()-1; i>=0; i--) {
+  for (size_t i=myBuffers.size()-1; i>=0; i--) {
     if (myBuffers[i] != nullptr) {
       myBuffers[i]->FreeBuffer(*myBuffers[i]);
       delete myBuffers[i];
